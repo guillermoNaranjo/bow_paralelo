@@ -30,10 +30,13 @@ int main (int argc, char *argv[]) {
     string lectura_3[4] = {"dimension","diminish","test","sherlock"};
     string lectura_4[5] = {"patience","patient","patientlie","abyss","abyssinia"};
     string lectura_5[4] = {"dimension","diminish","test","sherlock"};
-    map<string, int>** bow = new map<string, int>*[num_lecturas];
-    map<string, int> mp2(mp1);
-
-
+    map<string, int>* bow = new map<string, int>[num_lecturas];
+    lecturas[0] = lectura_0;
+    lecturas[1] = lectura_1;
+    lecturas[2] = lectura_2;
+    lecturas[3] = lectura_3;
+    lecturas[4] = lectura_4;
+    lecturas[5] = lectura_5;
     //insertar palabras al diccionario de cada lectura
    for (int i = 0; i<num_palabras;i++){
     my_dictionary_0.insert({palabras[i],0});
@@ -45,20 +48,34 @@ int main (int argc, char *argv[]) {
    map<string, int> my_dictionary_4(my_dictionary_0);
    map<string, int> my_dictionary_5(my_dictionary_0);
 
+   bow[0] = my_dictionary_0;
+   bow[1] = my_dictionary_1;
+   bow[2] = my_dictionary_2;
+   bow[3] = my_dictionary_3;
+   bow[4] = my_dictionary_4;
+   bow[5] = my_dictionary_5;
+    //map<string, int>* BOW[num_lecturas] = {}
+
+    for (int i = 0; i<num_lecturas;i++){
+        for (int j = 0; j<tam_lecturas[i];j++){
+            bow[i][lecturas[i][j]]+=1;
+        }
+    }
+
     //aumentar conteo de las palabras si existen en la lectura
    for (int j = 0; j<tam_0; j++){
-    my_dictionary_0[lectura_0[j]]+=1;
+    bow[0][lectura_0[j]]+=1;
    }
 
    for (int j = 0; j<tam_1; j++){
-    my_dictionary_1[lectura_1[j]]+=1;
+    bow[1][lectura_1[j]]+=1;
    }
 
 
    for (auto iterator = my_dictionary_1.begin(); iterator != my_dictionary_1.end(); ++iterator) {
    cout << iterator->first << " " << iterator->second << "\n";
    }
-    cout << "nuevo diccionario \n";
+   cout << "nuevo diccionario \n";
    for (auto iterator = my_dictionary_1.begin(); iterator != my_dictionary_1.end(); ++iterator) {
    cout << iterator->first << " " << iterator->second << "\n";
    }
