@@ -38,6 +38,32 @@ void print_dictionary_num(map<string, int>* bow,int num_lecturas){
     }
 }
 
+void dict_to_array(map<string, int>* bow,int num_lecturas,int** results,int num_palabras){
+    for (int i=0; i < num_lecturas; i++){
+        int index = 0;
+        for (auto iterator = bow[i].begin(); iterator != bow[i].end(); ++iterator) {
+            results[i][index] = iterator->second;
+            index++;
+        }   
+    }
+}
+
+void print_array(int** results, int num_palabras, int num_lecturas){
+    cout << "printng results ..." << "\n";
+    for (int i = 0; i < num_lecturas; i++){
+        for (int j = 0; j < num_palabras; j++){
+            cout << results[i][j] << " ";
+        }
+        cout << "\n";
+    }
+}
+
+/*
+for (auto iterator = my_dictionary_1.begin(); iterator != my_dictionary_1.end(); ++iterator) {
+   cout << iterator->first << " " << iterator->second << "\n";
+   }
+*/
+
 int main (int argc, char *argv[]) {
     //variables de la forma _# son correspondientes a cada lectura
     const int num_lecturas = 6;
@@ -69,6 +95,12 @@ int main (int argc, char *argv[]) {
     lecturas[4] = lectura_4;
     lecturas[5] = lectura_5;
 
+    int** results = new int*[num_lecturas];
+    
+    for (int i=0; i<num_lecturas; i++){
+        results[i] = new int[num_palabras];
+    }
+
     double start = omp_get_wtime();
 
     my_dictionary_0 = fill_dictionary(num_palabras,palabras);
@@ -88,11 +120,19 @@ int main (int argc, char *argv[]) {
 
     count_words(bow,tam_lecturas,num_lecturas,lecturas);
 
-    print_dictionary_num(bow,num_lecturas);
+    //print_dictionary_num(bow,num_lecturas);
+
+    dict_to_array(bow,num_lecturas,results,num_palabras);
+
+    print_array(results,num_palabras,num_lecturas);
 
     double end = omp_get_wtime();
 
     cout << "Time: " << end - start << "\n";
 
+    for (int i=0; i<num_lecturas;i++){
+        cout << "deleting matrix ... ";
+        delete[] results[i];
+    }
     return 0;
 }

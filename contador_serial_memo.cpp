@@ -63,16 +63,8 @@ int main (int argc, char *argv[]) {
     }
 
     //aumentar conteo de las palabras si existen en la lectura
-   for (int j = 0; j<tam_0; j++){
-    bow[0][lectura_0[j]]+=1;
-   }
 
-   for (int j = 0; j<tam_1; j++){
-    bow[1][lectura_1[j]]+=1;
-   }
-
-
-   for (auto iterator = my_dictionary_1.begin(); iterator != my_dictionary_1.end(); ++iterator) {
+   for (auto iterator = my_dictionary_0.begin(); iterator != my_dictionary_0.end(); ++iterator) {
    cout << iterator->first << " " << iterator->second << "\n";
    }
    cout << "nuevo diccionario \n";
