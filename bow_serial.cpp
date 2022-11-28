@@ -50,7 +50,7 @@ void dict_to_array(map<string, int>* bow,int num_lecturas,int** results,int num_
     for (int i=0; i < num_lecturas; i++){
         int index = 0;
         for (auto iterator = bow[i].begin(); iterator != bow[i].end(); ++iterator) {
-            results[i][index] = iterator->second;
+            results[i][index] = int(iterator->second);
             index++;
         }   
     }
@@ -97,12 +97,14 @@ void readDictionary(std::string* arr, std::string fileName, long long int size){
     }
 }
 
-std::string* readText(std::string fileName){
+std::string* readText(std::string fileName, long long int size = 100000){
 
     std::vector<std::string> ret;
     std::ifstream file;
     std::string line;
-    long long int i=0;
+
+    long long int i = 0;
+    std::string* arr = new std::string[size];
 
     file.open(fileName.c_str());
 
@@ -113,17 +115,19 @@ std::string* readText(std::string fileName){
             char letter;
             file>>letter;
 
-            while(letter != ','){
+            while(letter != ',' && !file.eof()){
                 temp.push_back(letter);
                 file>>letter;
             }
 
-           ret.push_back(temp); 
+           arr[i] = temp;
+           i++;
         }
         file.close();
-        return ret.data();
+
+        return arr; 
     }
-    return ret.data();
+    return arr;
 }
 
 int main (int argc, char *argv[]) {
@@ -131,12 +135,12 @@ int main (int argc, char *argv[]) {
     const int num_lecturas = 6;
     const int num_palabras =  15164;
     map<string, int> my_dictionary_0;  
-    int tam_0 = 10;
-    int tam_1 = 10;
-    int tam_2 = 10;
-    int tam_3 = 10;
-    int tam_4 = 5;
-    int tam_5 = 7;
+    int tam_0 = 80000;
+    int tam_1 = 80000;
+    int tam_2 = 80000;
+    int tam_3 = 80000;
+    int tam_4 = 80000;
+    int tam_5 = 80000;
     string libros[num_lecturas] = {"shakespeare_the_merchant_of_venice.txt","shakespeare_romeo_juliet.txt",
                                    "shakespeare_hamlet.txt","dickens_oliver_twist.txt","dickens_a_tale_of_two_cities.txt","dickens_a_christmas_carol.txt"};
     int tam_lecturas[num_lecturas] = {tam_0,tam_1,tam_2,tam_3,tam_4,tam_5}; //arreglo con los tamaños de las lecturas
@@ -144,13 +148,14 @@ int main (int argc, char *argv[]) {
     readDictionary(palabras,"diccionario.txt",num_palabras);
     string** lecturas = new string*[num_lecturas];
 
-    /* lectura de obras completas y guardar en arreglo
+    //lectura de obras completas y guardar en arreglo
+
     for (int i = 0; i < num_lecturas; i++){
         string* libro = readText(libros[i]);
         lecturas[i] = libro;
     }
-    */
-    //Leer los libros correspondientes
+    
+    /*
     string lectura_0[tam_0] = {"astonish","astonish","astonishment","astound","astounded","astounding","astray","asunder","asylum","atheistical"};
     string lectura_1[tam_1] = {"athirst","athwart","atmosphere","atmospheric","atom","atomic","atomie","atonement","atones","atop"};
     string lectura_2[tam_2] = {"atrocious","atrociously","atrocity","attach","attachment","attack","attain","attainable","attainment","attempt"};
@@ -163,18 +168,22 @@ int main (int argc, char *argv[]) {
     lecturas[3] = lectura_3;
     lecturas[4] = lectura_4;
     lecturas[5] = lectura_5;
+    */
 
     map<string, int>* bow = new map<string, int>[num_lecturas];
-
-    cout << lecturas[2][2];
 
     int** results = new int*[num_lecturas];
     
     for (int i=0; i<num_lecturas; i++){
         results[i] = new int[num_palabras];
+        for (int j = 0; j < num_palabras; j++){
+            results[i][j] = 0;
+        }
     }
 
     double start = omp_get_wtime();
+
+    cout << palabras[0] << " " << palabras[1] << " " << palabras[2] << "\n";
 
     my_dictionary_0 = fill_dictionary(num_palabras,palabras);
    
@@ -193,7 +202,13 @@ int main (int argc, char *argv[]) {
 
     count_words(bow,tam_lecturas,num_lecturas,lecturas);
 
+    cout << lecturas[0][3] << "\n";
+
+    cout << " palabras en " << bow[0]["youth"] << "\n";
+
     //print_dictionary_num(bow,num_lecturas);
+
+    cout << "Resultado: " << results[0][0] << "\n";
 
     dict_to_array(bow,num_lecturas,results,num_palabras);
 
@@ -201,13 +216,17 @@ int main (int argc, char *argv[]) {
 
     double end = omp_get_wtime();
 
+    cout << "Resultado: " << results[0][0] << "\n";
+
     cout << "Time: " << end - start << "\n";
 
     save_to_CSV("bow_test.csv",results,num_palabras,num_lecturas);
 
-    for (int i=0; i<num_lecturas;i++){
-        cout << "deleting matrix ... ";
+    /*
+        for (int i=0; i<num_lecturas;i++){
         delete[] results[i];
     }
+    */
+
     return 0;
 }
