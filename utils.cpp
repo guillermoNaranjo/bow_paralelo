@@ -25,12 +25,15 @@ void readDictionary(std::string* arr, std::string fileName, long long int size){
     }
 }
 
-std::string* readText(std::string fileName){
+
+std::string* readText(std::string fileName, long long int size = 20000){
 
     std::vector<std::string> ret;
     std::ifstream file;
     std::string line;
-    long long int i=0;
+
+    long long int i = 0;
+    std::string* arr = new std::string[size];
 
     file.open(fileName.c_str());
 
@@ -41,15 +44,17 @@ std::string* readText(std::string fileName){
             char letter;
             file>>letter;
 
-            while(letter != ','){
+            while(letter != ',' && !file.eof()){
                 temp.push_back(letter);
                 file>>letter;
             }
 
-           ret.push_back(temp); 
+           arr[i] = temp;
+           i++;
         }
         file.close();
 
-        return ret.data();
+        return arr;
+        
     }
 }
