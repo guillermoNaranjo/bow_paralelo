@@ -3,9 +3,9 @@
 #include <fstream>
 #include <vector>
 
-std::string* readDictionary(std::string fileName){
+void readDictionary(std::string* arr, std::string fileName, long long int size){
 
-    std::vector<std::string> ret;
+    arr = new std::string[size];
     std::ifstream file;
     std::string line;
     long long int i=0;
@@ -13,14 +13,15 @@ std::string* readDictionary(std::string fileName){
     file.open(fileName.c_str());
 
     if (file.is_open()){
-        while(!file.eof()){
+        while(i<size){
             getline(file, line);
             line.pop_back();
-            ret.push_back(line);
+            arr[i] = line;
+            std::cout << line << std::endl;
+            i++;
         }
         file.close();
 
-        return ret.data();
     }
 }
 
