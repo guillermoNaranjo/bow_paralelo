@@ -73,16 +73,17 @@ int main (int argc, char *argv[]) {
     //Lista de diccionarios para almacenar resultados
     map<string, int>* bow = new map<string, int>[num_lecturas];
     //Inicializar conteo del tiempo de ejecución
-    double start = omp_get_wtime();
     //Lectura del diccionario de palabras 
     map<string, int> words = read_dictionary("diccionario.txt");
 
     const int num_palabras =  words.size();
 
     string* lista_palabras = new string[num_palabras];
-    
+
     //Lista de palabras 
     string* palabras = get_word_list(words);
+
+    double start = omp_get_wtime();
 
     //Llenado de matriz con diccionarios
     for (int i = 0; i < num_lecturas; i++){
